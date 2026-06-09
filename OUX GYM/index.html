@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OUX Gym | Fitness 5.0</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: #121212;
+            --gold-primary: #d4af37;
+            --gold-glow: rgba(212, 175, 55, 0.5);
+            --silver-primary: #c0c0c0;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --accent-red: #8b0000;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        header {
+            background: rgba(10, 10, 10, 0.95);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #333;
+            backdrop-filter: blur(10px);
+        }
+        .logo-nav {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--silver-primary);
+            text-transform: uppercase;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .points-container {
+            background: linear-gradient(135deg, #1f1f1f, #0a0a0a);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--gold-primary);
+            box-shadow: 0 0 10px var(--gold-glow);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .points-container span {
+            color: var(--gold-primary);
+            font-size: 1.2rem;
+        }
+        .cart-btn {
+            background: #222;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            border: 1px solid #444;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .cart-btn:hover {
+            background: var(--gold-primary);
+            color: #000;
+            border-color: var(--gold-primary);
+        }
+        .cart-badge {
+            background: var(--accent-red);
+            color: #fff;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 60px 20px;
+            text-align: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 80%);
+        }
+        .hero img {
+            max-width: 400px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 165, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold-primary);
+            margin-bottom: 10px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Pricing Section */
+        .billing-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 40px 0;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--gold-primary);
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--silver-primary); }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            background-color: #000;
+        }
+        .pricing-section {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: var(--silver-primary);
+            text-transform: uppercase;
+            border-bottom: 2px solid #333;
+            display: inline-block;
+            padding-bottom: 10px;
+            width: 100%;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        .card.recommended {
+            border: 1px solid var(--gold-primary);
+            box-shadow: 0 0 15px var(--gold-glow);
+            transform: scale(1.05);
+        }
+        .card.recommended:hover { transform: scale(1.05) translateY(-10px); }
+        .badge-recomendado {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold-primary);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            color: var(--silver-primary);
+        }
+        .card.recommended h3 { color: var(--gold-primary); }
+        .price-container { text-align: center; margin-bottom: 20px; }
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+        .savings {
+            color: #00ff88;
+            font-size: 0.9rem;
+            min-height: 20px;
+            font-weight: bold;
+        }
+        .features {
+            list-style: none;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+        .features li {
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            position: relative;
+            padding-left: 20px;
+        }
+        .features li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--gold-primary);
+        }
+        .features strong { color: var(--text-main); }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #333, #111);
+            color: var(--text-main);
+            border: 1px solid var(--silver-primary);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+        button:hover { background: var(--silver-primary); color: #000; }
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold-primary), #b38b22);
+            border: none;
+            color: #000;
+        }
+        .btn-gold:hover { background: var(--text-main); box-shadow: 0 0 15px var(--gold-glow); }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
+        }
+        .btn-outline:hover { background: var(--gold-primary); color: #000; }
+        .btn-red { background: #5a0000; border-color: #ff4444; color: white; padding: 5px 10px; font-size: 0.8rem; width: auto; }
+        .btn-red:hover { background: #ff4444; color: #fff;}
+
+        /* Registration Form */
+        .registration-section {
+            padding: 60px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid #333;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--silver-primary);
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 5px var(--gold-glow);
+        }
+
+        /* Footers */
+        footer {
+            background: #0a0a0a;
+            border-top: 1px solid #333;
+            padding: 60px 40px 20px;
+            margin-top: 40px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 40px;
+        }
+        .footer-col h4 {
+            color: var(--gold-primary);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+        .footer-col a, .footer-col p {
+            display: block;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        .footer-col a:hover { color: var(--gold-primary); }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #222;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Modals Generales */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            backdrop-filter: blur(5px);
+            transition: opacity 0.3s ease;
+        }
+        .modal {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid var(--gold-primary);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal h2 { color: var(--gold-primary); margin-bottom: 15px; }
+        .modal p { margin-bottom: 25px; color: var(--text-muted); }
+        .modal .points-earned { font-size: 1.5rem; color: #00ff88; font-weight: bold; margin-bottom: 25px; display: block;}
+
+        /* Modal Carrito */
+        .modal.cart-modal { max-width: 600px; text-align: left; }
+        .cart-items-container { max-height: 250px; overflow-y: auto; margin-bottom: 20px; padding-right: 10px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #222; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--gold-primary); }
+        .cart-item-title { font-weight: bold; color: var(--text-main); }
+        .cart-item-price { color: var(--gold-primary); }
+        .cart-total { font-size: 1.5rem; font-weight: bold; text-align: right; border-top: 1px solid #444; padding-top: 15px; margin-bottom: 25px; }
+        .payment-methods { display: flex; gap: 20px; margin-bottom: 20px; }
+        .payment-methods label { display: flex; align-items: center; gap: 5px; cursor: pointer; color: var(--silver-primary); }
+        .modal-actions { display: flex; gap: 15px; }
+
+        /* Modal Legal (Términos / Privacidad) */
+        .modal.legal-modal {
+            max-width: 800px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            padding: 30px;
+        }
+        .legal-content {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 15px;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            text-align: justify;
+        }
+        .legal-content h3 { color: var(--gold-primary); margin-top: 25px; margin-bottom: 10px; font-size: 1.2rem; }
+        .legal-content p, .legal-content li { margin-bottom: 12px; }
+        .legal-content ul { padding-left: 20px; }
+        
+        /* Scrollbar custom para áreas con scroll */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--gold-primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #b38b22; }
+
+        @media (max-width: 768px) {
+            .header-actions { flex-direction: column; align-items: flex-end; gap: 10px;}
+            header { padding: 10px 20px; align-items: flex-start; }
+            .logo-nav { margin-bottom: 5px;}
+            .card.recommended { transform: none; }
+            .card.recommended:hover { transform: translateY(-5px); }
+            .modal-actions { flex-direction: column; }
+            .modal.legal-modal { height: 90vh; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-nav">OUX Gym</div>
+        <div class="header-actions">
+            <div class="points-container">
+                Puntos OUX: <span id="userPoints">0</span>
+            </div>
+            <div class="cart-btn" onclick="abrirCarrito()">
+                🛒 Carrito <span class="cart-badge" id="cartCount">0</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <img src="WhatsApp Image 2026-06-04 at 2.48.21 PM.jpeg" alt="OUX Gym Logo" onerror="this.style.display='none'">
+        <h1>La tecnología detrás de tu fuerza</h1>
+        <p>Entrenamiento inteligente. Estatus premium.</p>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <h2 class="section-title">Pase Individual</h2>
+        <div class="grid" style="grid-template-columns: 1fr; max-width: 400px; margin: 0 auto 60px;">
+            <div class="card">
+                <h3>Pase Por Día</h3>
+                <div class="price-container">
+                    <div class="price">$100 MXN</div>
+                    <div class="savings">Pago único</div>
+                </div>
+                <ul class="features">
+                    <li><strong>Acceso:</strong> de 6:00am a 8:00pm acceso al equipo inteligente.</li>
+                    <li><strong>Ideal para:</strong> Conocer las instalaciones y la tecnología sin compromisos.</li>
+                </ul>
+                <button onclick="agregarAlCarrito('Pase por Día', 100, 50)">Añadir al Carrito</button>
+            </div>
+        </div>
+
+        <h2 class="section-title">Membresías Inteligentes</h2>
+        <div class="billing-toggle">
+            <span style="font-weight: bold;">Mensual</span>
+            <label class="switch">
+                <input type="checkbox" id="billingSwitch" onchange="toggleBilling()">
+                <span class="slider"></span>
+            </label>
+            <span style="font-weight: bold; color: var(--gold-primary);">Anual (Ahorra hasta $5,000)</span>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3 style="color: #cd7f32;">Bronce "Smart Base"</h3>
+                <div class="price-container">
+                    <div class="price" id="price-bronce">$500</div>
+                    <div class="savings" id="save-bronce">Mensual</div>
+                </div>
+                <ul class="features">
+                    <li><strong>Entrenador:</strong> Asistencia en piso. Correcciones básicas.</li>
+                    <li><strong>Beneficio:</strong> Entrenamiento económico, a tu ritmo y sin filas.</li>
+                </ul>
+                <button onclick="agregarAlCarrito('Membresía Bronce', 'bronce', 150)">Suscribirse</button>
+            </div>
+
+            <div class="card">
+                <h3>Plata "Smart Pro"</h3>
+                <div class="price-container">
+                    <div class="price" id="price-plata">$1,000</div>
+                    <div class="savings" id="save-plata">Mensual</div>
+                </div>
+                <ul class="features">
+                    <li><strong>Acceso:</strong> Horario libre total (mientras esten abiertas nuestras instalaciones).</li>
+                    <li><strong>Entrenador:</strong> 1 sesión mensual (30 min).</li>
+                    <li><strong>Beneficio:</strong> Optimiza tiempo con guía inteligente y supervisión periódica.</li>
+                </ul>
+                <button onclick="agregarAlCarrito('Membresía Plata', 'plata', 250)">Suscribirse</button>
+            </div>
+
+            <div class="card recommended">
+                <div class="badge-recomendado">Recomendada</div>
+                <h3 style="color: var(--gold-primary);">Oro "Eco-Elite"</h3>
+                <div class="price-container">
+                    <div class="price" id="price-oro">$1,500</div>
+                    <div class="savings" id="save-oro">Mensual</div>
+                </div>
+                <ul class="features">
+                    <li><strong>Acceso:</strong> Total libre, uso prioritario de máquinas eco-eficientes.</li>
+                    <li><strong>Entrenador:</strong> Coaching Semanal (Senior). 1 sesión (45 min) cada 2 semanas.</li>
+                    <li><strong>Beneficio:</strong> Balance perfecto de tecnología, sustentabilidad y acompañamiento experto.</li>
+                </ul>
+                <button class="btn-gold" onclick="agregarAlCarrito('Membresía Oro', 'oro', 600)">Suscribirse</button>
+            </div>
+
+            <div class="card">
+                <h3 style="color: #e5e4e2;">Platino "Infinite"</h3>
+                <div class="price-container">
+                    <div class="price" id="price-platino">$2,500</div>
+                    <div class="savings" id="save-platino">Mensual</div>
+                </div>
+                <ul class="features">
+                    <li><strong>Acceso VIP:</strong> Pase todo incluido. Invita a un amigo gratis el Lunes y Viernes.</li>
+                    <li><strong>Extras:</strong> Talleres nutrición, <strong>Smart Shake gratis</strong>.</li>
+                    <li><strong>Entrenador:</strong> 1-a-1 (Master). Sesiones semanales.</li>
+                    <li><strong>Beneficio:</strong> Personalización absoluta y estatus premium.</li>
+                </ul>
+                <button onclick="agregarAlCarrito('Membresía Platino', 'platino', 1000)">Obtener Estatus VIP</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hardware Complementario -->
+    <section class="pricing-section" style="border-top: 1px solid #333; margin-top: 20px;">
+        <h2 class="section-title">Hardware Complementario</h2>
+        <div class="grid" style="grid-template-columns: 1fr; max-width: 500px; margin: 0 auto;">
+            <div class="card" style="border-color: #00ffff; box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);">
+                <h3 style="color: #00ffff;">Smart Shake Bottle</h3>
+                <div class="price-container">
+                    <div class="price">$900 MXN</div>
+                    <div class="savings">Pago único (Gratis con Platino)</div>
+                </div>
+                <ul class="features">
+                    <li><strong>Salud:</strong> Mide hidratación y registra biométricos automáticamente.</li>
+                    <li><strong>Construcción:</strong> Acero inoxidable, diseño térmico y resistente a impactos.</li>
+                </ul>
+                <button style="background: linear-gradient(135deg, #004d4d, #001a1a); border-color: #00ffff;" onclick="agregarAlCarrito('Smart Shake Bottle', 900, 100)">Añadir al Equipo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Creación de Usuario -->
+    <section class="registration-section" id="crear-cuenta">
+        <h2 class="section-title" style="font-size: 1.8rem; border: none; margin-bottom: 20px;">Crea tu Cuenta</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Regístrate para guardar tu progreso, acumular puntos y gestionar tu membresía.</p>
+        
+        <form onsubmit="registrarUsuario(event)">
+            <div class="form-group">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" placeholder="Ej. Carlos Mendoza" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" placeholder="ejemplo@correo.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" placeholder="Crea una contraseña segura" required minlength="6">
+            </div>
+            <button type="submit" class="btn-gold">Registrar Usuario</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Legales</h4>
+                <!-- Botones funcionando para Modales Legales -->
+                <a onclick="abrirLegal('terminos')">Términos y Condiciones</a>
+                <a onclick="abrirLegal('privacidad')">Aviso de Privacidad</a>
+                <a href="#crear-cuenta">Crear Cuenta</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contacto</h4>
+                <p>📱 <strong>WhatsApp:</strong> 55 3420 6844</p>
+                <p>📞 <strong>Teléfono:</strong> 55 9163 5401</p>
+                <p>✉️ <strong>Email:</strong> oux0269@gmail.com</p>
+            </div>
+            <div class="footer-col">
+                <h4>Síguenos</h4>
+                <p>🎵 <strong>TikTok:</strong> @OUX.GYM</p>
+                <p>📸 <strong>Instagram:</strong> @Oux.gym</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 OUX Gym. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <!-- Modal Mensaje General (Éxito) -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modalBox">
+            <h2 id="modalTitulo">¡Operación Exitosa!</h2>
+            <p id="modalMensaje">Has realizado la acción con éxito.</p>
+            <span class="points-earned" id="modalPuntos" style="display:none;">+0 Puntos OUX</span>
+            <button class="btn-gold" onclick="cerrarModalGeneral()">Aceptar y Continuar</button>
+        </div>
+    </div>
+
+    <!-- Modal Carrito y Pago -->
+    <div class="modal-overlay" id="cartOverlay">
+        <div class="modal cart-modal" id="cartBox">
+            <h2>🛒 Tu Carrito</h2>
+            
+            <div class="cart-items-container" id="cartItemsList">
+                <!-- Se inyecta por JS -->
+            </div>
+            
+            <div class="cart-total">
+                Total a pagar: $<span id="cartTotalValue">0</span> MXN
+            </div>
+
+            <h3 style="margin-bottom: 15px; color: var(--silver-primary);">Forma de Pago</h3>
+            <div class="payment-methods">
+                <label><input type="radio" name="pago" value="tarjeta" checked> Tarjeta</label>
+                <label><input type="radio" name="pago" value="paypal"> PayPal</label>
+                <label><input type="radio" name="pago" value="efectivo"> Pago en Recepción</label>
+            </div>
+            
+            <div class="form-group">
+                <input type="text" placeholder="Número de tarjeta o referencia" required>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-outline" style="width: 50%;" onclick="cerrarCarrito()">Seguir Comprando</button>
+                <button class="btn-gold" style="width: 50%;" onclick="finalizarCompra()">Procesar Pago</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Legal (Términos / Privacidad) -->
+    <div class="modal-overlay" id="legalOverlay">
+        <div class="modal legal-modal" id="legalBox">
+            <h2 id="legalTitulo">Título Legal</h2>
+            <div class="legal-content" id="legalTexto">
+                <!-- Se inyecta por JS dependiendo del botón presionado -->
+            </div>
+            <button class="btn-outline" style="width: auto; align-self: flex-end; padding: 10px 30px;" onclick="cerrarLegal()">Cerrar Documento</button>
+        </div>
+    </div>
+
+    <!-- Script Lógica -->
+    <script>
+        let isAnnual = false;
+        let puntosActuales = 0;
+        let carrito = [];
+
+        const planes = {
+            bronce: { mensual: 500, anual: 4000, ahorro: "$2,000" },
+            plata: { mensual: 1000, anual: 10000, ahorro: "$2,000" },
+            oro: { mensual: 1500, anual: 14000, ahorro: "$4,000" },
+            platino: { mensual: 2500, anual: 25000, ahorro: "$5,000" }
+        };
+
+        // Textos legales (Inteligencia Artificial y Biometría incluidas)
+        const textosLegales = {
+            terminos: `
+                <h3>1. Aceptación de los Términos</h3>
+                <p>Al acceder y utilizar las instalaciones, la aplicación móvil y la plataforma de hardware inteligente de OUX Gym (en adelante, "el Gimnasio"), usted acepta estar sujeto a estos Términos y Condiciones. OUX Gym opera como un entorno de "Fitness 5.0", lo que implica la interacción constante con tecnología de monitoreo y análisis de rendimiento.</p>
+                
+                <h3>2. Uso de la Maquinaria Inteligente y Biometría</h3>
+                <p>Nuestras máquinas están equipadas con sensores para medir su fuerza, resistencia y técnica. Al suscribirse, acepta que estos datos se registren en su perfil para que nuestra Inteligencia Artificial pueda sugerir ajustes y rutinas. El uso indebido, daño intencionado o hackeo del equipo físico o software resultará en la cancelación inmediata de la membresía y posibles acciones legales.</p>
+                
+                <h3>3. Sistema de "Puntos OUX"</h3>
+                <ul>
+                    <li>Los Puntos OUX se otorgan por compras de membresías, hardware (ej. Smart Shake) y cumplimiento de metas físicas registradas por el sistema.</li>
+                    <li>Los puntos son intransferibles, no tienen valor monetario real ni pueden canjearse por efectivo.</li>
+                    <li>Pueden ser utilizados para adquirir meses gratis, descuentos en mercancía o acceso a zonas exclusivas.</li>
+                </ul>
+
+                <h3>4. Hardware Complementario (Smart Shake)</h3>
+                <p>El Smart Shake Bottle está diseñado para conectarse a nuestros servidores locales. OUX Gym ofrece una garantía de 6 meses contra defectos de fábrica en los sensores térmicos y de hidratación, siempre y cuando no presente daño por caídas severas o inmersión prolongada fuera de los parámetros establecidos.</p>
+
+                <h3>5. Pagos, Renovaciones y Cancelaciones</h3>
+                <p>Las membresías mensuales y anuales se renuevan automáticamente al método de pago registrado. Para evitar cargos, las cancelaciones deben gestionarse en su portal en línea o en recepción con al menos 5 días hábiles de anticipación a su fecha de corte. No hay devoluciones por meses parciales no utilizados.</p>
+            `,
+            privacidad: `
+                <h3>1. Responsable del Tratamiento de Datos</h3>
+                <p>En cumplimiento con la <strong>Ley Federal de Protección de Datos Personales en Posesión de los Particulares</strong> (México), OUX Gym declara ser el responsable del tratamiento, uso y protección de sus datos personales, con domicilio en la Ciudad de México.</p>
+                
+                <h3>2. Datos Recopilados</h3>
+                <p>Por nuestra naturaleza tecnológica "Fitness 5.0", recabamos las siguientes categorías de datos:</p>
+                <ul>
+                    <li><strong>Datos de Identificación y Contacto:</strong> Nombre, correo electrónico, teléfono.</li>
+                    <li><strong>Datos Patrimoniales:</strong> Información bancaria y de facturación.</li>
+                    <li><strong>Datos Biométricos y de Salud (Sensibles):</strong> Ritmo cardíaco, niveles de hidratación (vía Smart Shake), peso, masa muscular, historial de rutinas, fuerza ejercida en máquinas y frecuencia de asistencia.</li>
+                </ul>
+
+                <h3>3. Finalidad del Uso de sus Datos</h3>
+                <p>Los datos sensibles (biométricos) son utilizados <strong>exclusivamente</strong> para la operación de nuestra Inteligencia Artificial, con el fin de crear rutinas personalizadas, prevenir lesiones y mostrarle su progreso en tiempo real. Los datos de contacto se utilizan para gestión de cuenta y envío de promociones u ofertas de Puntos OUX.</p>
+                <p><strong style="color:var(--accent-red);">OUX Gym NO vende, alquila ni cede sus datos biométricos ni de contacto a terceros bajo ninguna circunstancia ajena a la prestación del servicio.</strong></p>
+
+                <h3>4. Protección y Seguridad</h3>
+                <p>Toda la información viaja y se almacena bajo estrictos protocolos de encriptación de extremo a extremo (AES-256). Nuestros servidores cuentan con barreras físicas y firewalls de última generación para evitar filtraciones.</p>
+
+                <h3>5. Ejercicio de Derechos ARCO</h3>
+                <p>Usted tiene derecho a <strong>A</strong>cceder, <strong>R</strong>ectificar, <strong>C</strong>ancelar u <strong>O</strong>ponerse al tratamiento de sus datos. Para ejercer sus Derechos ARCO o revocar su consentimiento, deberá enviar una solicitud formal a nuestro Departamento de Privacidad al correo: <strong>oux0269@gmail.com</strong>.</p>
+            `
+        };
+
+        // Formatear moneda
+        const formatMoney = (amount) => amount.toLocaleString('en-US');
+
+        function toggleBilling() {
+            const checkbox = document.getElementById('billingSwitch');
+            isAnnual = checkbox.checked;
+            const period = isAnnual ? "anual" : "mensual";
+
+            document.getElementById('price-bronce').innerText = "$" + formatMoney(planes.bronce[period]);
+            document.getElementById('save-bronce').innerText = isAnnual ? "Ahorras " + planes.bronce.ahorro : "Mensual";
+            
+            document.getElementById('price-plata').innerText = "$" + formatMoney(planes.plata[period]);
+            document.getElementById('save-plata').innerText = isAnnual ? "Ahorras " + planes.plata.ahorro : "Mensual";
+            
+            document.getElementById('price-oro').innerText = "$" + formatMoney(planes.oro[period]);
+            document.getElementById('save-oro').innerText = isAnnual ? "Ahorras " + planes.oro.ahorro : "Mensual";
+            
+            document.getElementById('price-platino').innerText = "$" + formatMoney(planes.platino[period]);
+            document.getElementById('save-platino').innerText = isAnnual ? "Ahorras " + planes.platino.ahorro : "Mensual";
+        }
+
+        // Lógica del Carrito
+        function agregarAlCarrito(nombreBase, planKeyOrPrice, puntosBase) {
+            let precioNum = 0;
+            let puntosGanados = puntosBase;
+            let nombreFinal = nombreBase;
+            let esMembresia = planes[planKeyOrPrice] !== undefined;
+
+            if (esMembresia) {
+                precioNum = isAnnual ? planes[planKeyOrPrice].anual : planes[planKeyOrPrice].mensual;
+                puntosGanados = isAnnual ? puntosBase * 10 : puntosBase;
+                nombreFinal += isAnnual ? ' (Plan Anual)' : ' (Plan Mensual)';
+            } else {
+                precioNum = parseFloat(planKeyOrPrice);
+            }
+
+            carrito.push({
+                nombre: nombreFinal,
+                precio: precioNum,
+                puntos: puntosGanados
+            });
+
+            actualizarCarritoUI();
+            abrirCarrito();
+        }
+
+        function eliminarDelCarrito(index) {
+            carrito.splice(index, 1);
+            actualizarCarritoUI();
+        }
+
+        function actualizarCarritoUI() {
+            document.getElementById('cartCount').innerText = carrito.length;
+            
+            const container = document.getElementById('cartItemsList');
+            container.innerHTML = "";
+            let total = 0;
+
+            if (carrito.length === 0) {
+                container.innerHTML = "<p style='color: #888;'>Tu carrito está vacío.</p>";
+            } else {
+                carrito.forEach((item, index) => {
+                    total += item.precio;
+                    container.innerHTML += `
+                        <div class="cart-item">
+                            <div>
+                                <div class="cart-item-title">${item.nombre}</div>
+                                <div style="font-size: 0.85rem; color:#aaa;">+${item.puntos} pts</div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:15px;">
+                                <div class="cart-item-price">$${formatMoney(item.precio)}</div>
+                                <button class="btn-red" onclick="eliminarDelCarrito(${index})">X</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('cartTotalValue').innerText = formatMoney(total);
+        }
+
+        function abrirCarrito() {
+            const overlay = document.getElementById('cartOverlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                document.getElementById('cartBox').style.transform = 'translateY(0)';
+            }, 10);
+        }
+
+        function cerrarCarrito() {
+            const overlay = document.getElementById('cartOverlay');
+            overlay.style.opacity = '0';
+            document.getElementById('cartBox').style.transform = 'translateY(20px)';   
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+        }
+
+        function finalizarCompra() {
+            if (carrito.length === 0) {
+                mostrarMensajeGeneral("Atención", "No tienes ningún artículo en tu carrito.", "");
+                return;
+            }
+
+            let puntosGanadosCompra = carrito.reduce((sum, item) => sum + item.puntos, 0);
+            
+            cerrarCarrito();
+
+            puntosActuales += puntosGanadosCompra;
+            animarContador('userPoints', puntosActuales - puntosGanadosCompra, puntosActuales, 1000);
+
+            carrito = [];
+            actualizarCarritoUI();
+
+            setTimeout(() => {
+                mostrarMensajeGeneral("¡Pago Aprobado!", "Tu suscripción ha sido activada y procesada con éxito. Revisa tu bandeja de correo.", `+${puntosGanadosCompra} Puntos OUX`);
+            }, 350); 
+        }
+
+        // Lógica Registro de Usuarios
+        function registrarUsuario(e) {
+            e.preventDefault();
+            const form = e.target;
+            const nombre = form.querySelector('#nombre').value;
+            
+            mostrarMensajeGeneral("¡Bienvenido a OUX Gym!", `Hola ${nombre}, tu cuenta ha sido creada exitosamente. Inicia sesión para llevar tu rendimiento al máximo nivel.`, "+50 Puntos de Bienvenida");
+            
+            puntosActuales += 50;
+            animarContador('userPoints', puntosActuales - 50, puntosActuales, 1000);
+            
+            form.reset();
+        }
+
+        // Modales Legales
+        function abrirLegal(tipo) {
+            const titulo = tipo === 'terminos' ? 'Términos y Condiciones' : 'Aviso de Privacidad';
+            document.getElementById('legalTitulo').innerText = titulo;
+            document.getElementById('legalTexto').innerHTML = textosLegales[tipo];
+            
+            const overlay = document.getElementById('legalOverlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                document.getElementById('legalBox').style.transform = 'translateY(0)';
+            }, 10);
+        }
+
+        function cerrarLegal() {
+            const overlay = document.getElementById('legalOverlay');
+            overlay.style.opacity = '0';
+            document.getElementById('legalBox').style.transform = 'translateY(20px)';   
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+        }
+
+        // Modal Reutilizable General
+        function mostrarMensajeGeneral(titulo, mensaje, puntosStr) {
+            document.getElementById('modalTitulo').innerText = titulo;
+            document.getElementById('modalMensaje').innerHTML = mensaje;
+            
+            const puntosEl = document.getElementById('modalPuntos');
+            if(puntosStr) {
+                puntosEl.style.display = 'block';
+                puntosEl.innerText = puntosStr;
+            } else {
+                puntosEl.style.display = 'none';
+            }
+
+            const overlay = document.getElementById('modalOverlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                document.getElementById('modalBox').style.transform = 'translateY(0)';
+            }, 10); 
+        }
+
+        function cerrarModalGeneral() {
+            const overlay = document.getElementById('modalOverlay');
+            overlay.style.opacity = '0';
+            document.getElementById('modalBox').style.transform = 'translateY(20px)';   
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+        }
+
+        // Animación de puntos
+        function animarContador(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+    </script>
+</body>
+</html>
